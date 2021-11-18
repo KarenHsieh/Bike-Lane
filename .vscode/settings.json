@@ -1,0 +1,38 @@
+{
+  "editor.formatOnSave": false,
+  "editor.tabSize": 2,
+  "editor.renderWhitespace": "boundary",
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.trimAutoWhitespace": true,
+    "editor.autoClosingBrackets": "beforeWhitespace"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.trimAutoWhitespace": true,
+    "editor.autoClosingBrackets": "beforeWhitespace"
+  },
+  "[json]": {
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true
+  },
+  "[scss]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.trimAutoWhitespace": true,
+    "editor.autoClosingBrackets": "beforeWhitespace"
+  },
+  "editor.rulers": [80, 120],
+  "search.exclude": {
+    "**/dist": true,
+    "**/.next": true,
+    "**/node_module": true,
+  },
+  "cSpell.words": [
+    "Scenicspot"
+  ],
+}
