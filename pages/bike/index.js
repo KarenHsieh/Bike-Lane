@@ -13,7 +13,7 @@ import * as BikeActions from '../../redux/actions/BikeActions'
 // Styles And Icons
 import styles from './index.module.scss'
 
-const MapContainer = dynamic(() => import('../../components/MapContainer'), { ssr: false })
+const MapContainer = dynamic(() => import('../../components/BikeMapContainer'), { ssr: false })
 
 const Bike = () => {
   const { resultList, dataCount, selectedBikeLane = {} } = useSelector(state => state.BikeReducers)
@@ -52,7 +52,7 @@ const Bike = () => {
   return (
     <div className={styles.main}>
       <div className={styles.searchBar}>
-        <SearchBar />
+        <SearchBar mapType="bike" />
       </div>
 
       <div className={styles.result}>

@@ -69,15 +69,14 @@ export function* getBikeLanes({ payload }) {
 
 export function* getNearByStation({ payload }) {
   console.log(payload)
-  const { currentLat: lat = '', currentLng: lng = '' } = payload
-
-  uri.stationNearBy
+  const { lat = '', lng = '' } = payload
 
   let options = {}
   if (lat && lng) {
     options = {
       method: 'GET',
-      url: `${uri.stationNearBy}?$spatialFilter=nearby(${lat},${lng})&$format=JSON`,
+      // url: `${uri.stationNearBy}?$spatialFilter=nearby(${lat},${lng}, 200)&$format=JSON`,
+      url: `${uri.stationNearBy}?$spatialFilter=nearby(25.0409256,121.5093713, 200)&$format=JSON`,
     }
   }
 

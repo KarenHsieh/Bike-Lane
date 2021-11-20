@@ -11,7 +11,7 @@ import * as BikeActions from '../../redux/actions/BikeActions'
 // Styles And Icons
 import styles from './index.module.scss'
 
-const SearchBar = () => {
+const SearchBar = ({ mapType }) => {
   const dispatch = useDispatch()
   const { resultList, dataCount, isLoading, fetchDataError } = useSelector(state => state.BikeReducers)
 
@@ -29,11 +29,15 @@ const SearchBar = () => {
       const { latitude, longitude } = crd
 
       console.log('目前座標位置為:')
-      console.log('Latitude 緯度 : ' + crd.latitude)
-      console.log('Longitude 經度 : ' + crd.longitude)
+      console.log('Latitude 緯度 : ' + latitude)
+      console.log('Longitude 經度 : ' + longitude)
       console.log('位置誤差約 ' + crd.accuracy + ' 公尺')
 
-      dispatch(BikeActions.getBikeLanes(latitude, longitude))
+      if (mapType === 'bike') {
+        dispatch(BikeActions.getBikeLanes({ lat: latitude, lng: longitude }))
+      } else {
+        dispatch(BikeActions.getNearByStation(latitude, longitude))
+      }
     }
 
     function error(err) {
@@ -68,7 +72,8 @@ const SearchBar = () => {
       </div>
       <div>
         <button type="button" className={styles.nearbySearchButton} onClick={nearBySearch}>
-          <i></i>我附近的自行車道
+          <i></i>
+          {mapType === 'bike' ? '我附近的自行車道' : '我附近的租借站'}
         </button>
       </div>
     </div>
