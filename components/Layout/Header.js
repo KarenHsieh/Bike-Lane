@@ -1,8 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
 
-import Logo from '/public/icons/Logo-desktop.svg'
-
 import styles from './index.module.scss'
 
 const Header = () => {

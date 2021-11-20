@@ -1,10 +1,10 @@
 import { HYDRATE } from 'next-redux-wrapper'
 import { combineReducers } from 'redux'
 
-import AttractionsReducers from './AttractionsReducers'
+import BikeReducers from './BikeReducers'
 
 const combinedReducer = combineReducers({
-  AttractionsReducers,
+  BikeReducers,
 })
 
 const rootReducer = (state, action) => {

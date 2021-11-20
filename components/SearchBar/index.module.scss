@@ -1,0 +1,33 @@
+@import '../../styles/color.scss';
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.searchButton {
+  background-image: url('/searchIcon.png');
+  width: 109px;
+  height: 80px;
+  border-radius: 12px;
+  margin-left: 20px;
+}
+
+.nearbySearchButton {
+  width: 370px;
+  height: 80px;
+  border-radius: 12px;
+  color: $font_black;
+  font-size: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 60px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  i {
+    width: 28px;
+    height: 28px;
+    background-image: url('/vectorIcon.png');
+    margin-right: 9px;
+  }
+}

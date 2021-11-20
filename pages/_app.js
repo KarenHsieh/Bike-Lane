@@ -7,6 +7,9 @@ import { wrapper } from '../redux/store'
 import '../styles/global.scss'
 import Layout from '../components/Layout'
 import NextNProgress from 'nextjs-progressbar'
+import 'leaflet/dist/leaflet.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'react-bootstrap-typeahead/css/Typeahead.css'
 
 class WrappedApp extends App {
   getInitialProps = async ({ Component, ctx }) => {

@@ -1,6 +1,7 @@
 const axios = require('axios')
 const jsSHA = require('jssha')
 const ptx = require('./ptx')
+const convert = require('xml-js')
 
 axios.interceptors.request.use(
   config => {
@@ -76,4 +77,8 @@ exports.formatDate = date => {
   if (day.length < 2) day = '0' + day
 
   return [year, month, day].join('-')
+}
+
+exports.xml2js = xml => {
+  return convert.xml2json(xml, { compact: true, spaces: 4 })
 }

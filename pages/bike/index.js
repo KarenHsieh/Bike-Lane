@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import dynamic from 'next/dynamic'
 
 // Component
 import Select from 'react-select'
+import SearchBar from '../../components/SearchBar'
 
 import { axiosCall, formatDate } from '../../server/tools'
+
+import * as BikeActions from '../../redux/actions/BikeActions'
 
 // Styles And Icons
 import styles from './index.module.scss'
@@ -12,44 +16,120 @@ import styles from './index.module.scss'
 const MapContainer = dynamic(() => import('../../components/MapContainer'), { ssr: false })
 
 const Bike = () => {
-  const myPosition = [25.14017, 121.79959]
+  const { resultList, dataCount, selectedBikeLane = {} } = useSelector(state => state.BikeReducers)
 
-  const roadMap = [
-    [25.1421325173852, 121.802056935341],
-    [25.1422525621511, 121.802154526427],
-    [25.1425165264836, 121.802493612695],
-    [25.1430886541818, 121.802976550059],
-    [25.1434884881812, 121.803054838637],
-    [25.1438257817298, 121.80311257542],
-    [25.1439930465128, 121.803145744199],
-    [25.1441024902429, 121.803165413379],
-    [25.144263805563, 121.8032269283],
-    [25.1443534922954, 121.803327338599],
-    [25.1446058739486, 121.803749122201],
-    [25.1448679706783, 121.804068985326],
-    [25.145145912456, 121.80441502791],
-  ]
+  const [myPosition, setMyPosition] = useState([25.0409256, 121.5093713])
+  const [roadMap, setRoadMap] = useState([])
+  const [markers, setMarkers] = useState([])
+  // const [startPinPosition, setStartPinPosition] = useState('')
+  // const [endPinPosition, setEndPinPosition] = useState('')
 
-  const markers = [25.1422525621511, 121.802154526427]
+  useEffect(() => {
+    if (selectedBikeLane && Object.keys(selectedBikeLane).length) {
+      let { Geometry } = selectedBikeLane
+      Geometry = Geometry.replace('MULTILINESTRING ((', '').replace('))', '')
+
+      const spotList = Geometry.split(',')
+
+      // 因為拿到的資料是 [經度, 緯度] ，但地圖需要的順序是 [緯度, 經度]
+
+      const firstSpot = spotList[0].split(' ')
+      // const lastSpot = spotList[spotList.length - 1].split(' ')
+      // console.log(firstSpot.reverse())
+      setMyPosition(firstSpot)
+
+      const bikeLane = spotList.map(spot => {
+        const position = spot.split(' ')
+        const [longitude, latitude] = position // 121.741369000226 25.0899390023122
+
+        return [latitude, longitude]
+      })
+
+      setRoadMap(bikeLane)
+    }
+  }, [selectedBikeLane])
 
   return (
-    <div className={styles.map}>
-      <MapContainer myPosition={myPosition} markers={markers} roadMap={roadMap} />
+    <div className={styles.main}>
+      <div className={styles.searchBar}>
+        <SearchBar />
+      </div>
+
+      <div className={styles.result}>
+        {dataCount ? (
+          <div className={styles.list}>
+            <List />
+          </div>
+        ) : null}
+
+        <div className={styles.map}>
+          <MapContainer mapType="bike" myPosition={myPosition} markers={markers} roadMap={roadMap} />
+        </div>
+      </div>
     </div>
   )
 }
 export default Bike
 
-// export const getStaticProps = async ctx => {
+const List = () => {
+  const dispatch = useDispatch()
+  const { resultList } = useSelector(state => state.BikeReducers)
 
-//   const { data: recentActivityList } = await axiosCall({
-//     method: 'GET',
-//     url: `https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$filter=date(StartTime) ge ${formatDate(
-//       new Date()
-//     )}&$orderby=StartTime asc&$format=JSON`,
-//   })
+  const [selectedData, setSelectedData] = useState({})
 
-//   return {
-//     props: { recentActivityList },
-//   }
-// }
+  useEffect(() => {
+    if (Object.keys(selectedData).length) {
+      dispatch(BikeActions.updateSelectedData(selectedData))
+    }
+  }, [selectedData])
+
+  const list = resultList.map((result, index) => {
+    const {
+      RouteName = '',
+      CyclingLength = '',
+      RoadSectionStart = '',
+      RoadSectionEnd = '',
+      Direction = '',
+      City = '',
+      Town = '',
+    } = result
+
+    let townList = []
+
+    if (Town) {
+      if (Town.indexOf('、') > 0) {
+        townList = Town.split('、').map(data => {
+          return (
+            <div className={styles.cityTag} key={data}>
+              {data}
+            </div>
+          )
+        })
+      } else {
+        townList = <div className={styles.cityTag}>{Town}</div>
+      }
+    }
+
+    return (
+      <div
+        className={styles.item}
+        onClick={() => {
+          setSelectedData(result)
+        }}
+      >
+        <div className={styles.title}>{RouteName || '未命名路線'}</div>
+        {CyclingLength && <div>車道長度約 {CyclingLength} 公尺</div>}
+        {RoadSectionStart && <div>起點位置：{RoadSectionStart}</div>}
+        {RoadSectionEnd && <div>終點位置：{RoadSectionEnd}</div>}
+        {City || Town || Direction ? (
+          <div className={styles.tags}>
+            {City && <div className={styles.cityTag}>{City}</div>}
+            {townList}
+            {Direction && <div className={styles.directionTag}>{Direction}</div>}
+          </div>
+        ) : null}
+      </div>
+    )
+  })
+  return <div className={styles.items}>{list}</div>
+}

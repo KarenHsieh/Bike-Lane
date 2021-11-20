@@ -4,7 +4,7 @@ import styles from './index.module.scss'
 const Footer = () => {
   return (
     <div className={styles.footer}>
-      <div>#The F2E 3rd Week01 #Breakfast</div>
+      <div>#The F2E 3rd Week02 自行車道地圖資訊整合網</div>
     </div>
   )
 }

@@ -1,175 +1,74 @@
 @import '../../styles/color.scss';
 
-.top {
-  display: flex;
-  padding: 0px 95px;
-  margin-bottom: 57px;
-  .slogan {
-    font-size: 48px;
-    line-height: 69px;
-    margin-right: 77px;
-
-    .other {
-      font-size: 18px;
-
-      span {
-        font-size: 20px;
-      }
-    }
-  }
-
-  .search {
-    width: 350px;
-    > div {
-      margin-bottom: 7px;
-    }
-
+.main {
+  padding: 80px 60px;
+  .searchBar {
+    margin-bottom: 60px;
     input {
-      width: 350px;
-      padding: 11px 30px;
-      background: #f9f9f9;
-      border: 1px solid #e6e6e6;
-      box-sizing: border-box;
-      border-radius: 5px;
-    }
-    button {
-      width: 350px;
-      height: 50px;
-      background: #7f977b;
-      color: #fff;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 5px;
+      border: none;
+      border-bottom: 3px solid #c4cdd5;
+      height: 95px;
+      width: 800px;
+      font-size: 48px;
+      background-color: transparent;
     }
   }
-}
 
-.recentActivity {
-  .row {
+  .map {
     width: 100%;
+    height: 900px;
+  }
+
+  .result {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-}
-
-.block {
-  .row {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-}
-
-.activityCard {
-  display: flex;
-  width: 540px;
-  height: 160px;
-  border-radius: 12px;
-  background: #f9f9f9;
-  border: 1px solid #e5e5e5;
-  margin-bottom: 12px;
-  box-sizing: border-box;
-
-  .thumbnail {
-    width: 160px;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    box-sizing: border-box;
-  }
-
-  &:hover {
-    .thumbnail {
-      transform: scale(1.1);
+    .list {
+      width: 600px;
+      height: 900px;
+      overflow-y: scroll;
     }
   }
-
-  .content {
-    width: 380px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    padding: 16px 24px 18px 30px;
-  }
-
-  .date {
-    font-size: 16px;
-    font-weight: 400;
-    color: $font_gray;
-    margin-bottom: 3px;
-  }
-  .name {
-    font-size: 22px;
-    color: $font_black;
-    font-weight: bold;
-    height: 60px;
-    margin-bottom: 17px;
-  }
-
-  .location {
-    display: flex;
-    justify-content: space-between;
-
-    .city {
-      color: $font_gray;
-      font-weight: 400;
-      font-size: 16px;
-    }
-
-    .moreInfo {
-      color: $font_green_light;
-      font-weight: 400;
-      font-size: 16px;
-    }
-  }
-}
-
-.itemCard {
-  width: 255px;
-  .thumbnail {
-    width: 100%;
-    height: 200px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 20px;
-    box-sizing: border-box;
-  }
-
-  .content {
-    .name {
-      color: #2f2f2f;
-      font-size: 22px;
-      font-weight: bold;
-    }
-  }
-}
-
-.recentActivity,
-.block {
-  .title {
-    display: flex;
-    justify-content: space-between;
-    margin: 36px 0px 12px;
-
-    > div {
-      &:first-child {
-        color: #1e1e1e;
-        font-size: 36px;
+  .items {
+    .item {
+      border-bottom: 1px solid #c4cdd5;
+      padding: 20px 30px;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+      > div {
+        font-size: 24px;
+        font-weight: 400px;
+        line-height: 36px;
+      }
+      .title {
+        font-size: 28px;
+        line-height: 42px;
+        font-weight: bold;
       }
 
-      &:last-child {
-        color: $font_orange;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .tags {
+      display: flex;
+      // justify-content: right;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 6px;
+
+      > div {
+        border-radius: 24px;
+        color: #fff;
+        margin-right: 6px;
+        padding: 2px 12px;
         font-size: 16px;
-        display: flex;
-        align-items: flex-end;
-        &:hover {
-          cursor: pointer;
-        }
+        margin-top: 6px;
+      }
+      .cityTag {
+        background-color: $font_purple;
+      }
+
+      .directionTag {
+        background-color: $font_light_green;
       }
     }
   }

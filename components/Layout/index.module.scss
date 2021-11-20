@@ -5,7 +5,7 @@ $footerHeight: 60px;
 
 .document {
   width: 100%;
-
+  background-color: #fafafa;
   .header,
   .footer {
     display: flex;
@@ -28,11 +28,11 @@ $footerHeight: 60px;
   .otherPage {
     display: flex;
     align-items: center;
-    color: $font_gray;
+    color: $font_black;
     box-sizing: border-box;
     height: 100%;
     a {
-      color: $font_gray;
+      color: $font_black;
     }
     > div {
       height: 100%;
@@ -43,10 +43,6 @@ $footerHeight: 60px;
       &:hover {
         cursor: pointer;
         border-bottom: 8px solid #7b61ff;
-        // &::after {
-        //   display: block;
-        //   box-sizing: border-box;
-        // }
       }
 
       &::after {
@@ -61,7 +57,7 @@ $footerHeight: 60px;
 
 .footer {
   height: $footerHeight !important;
-  background-color: #65895f !important;
+  background-color: $font_dark_green !important;
   color: #fff !important;
   justify-content: center !important;
 }
