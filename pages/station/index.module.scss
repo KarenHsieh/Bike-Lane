@@ -47,29 +47,5 @@
         cursor: pointer;
       }
     }
-
-    .tags {
-      display: flex;
-      // justify-content: right;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 6px;
-
-      > div {
-        border-radius: 24px;
-        color: #fff;
-        margin-right: 6px;
-        padding: 2px 12px;
-        font-size: 16px;
-        margin-top: 6px;
-      }
-      .cityTag {
-        background-color: $font_purple;
-      }
-
-      .directionTag {
-        background-color: $font_light_green;
-      }
-    }
   }
 }

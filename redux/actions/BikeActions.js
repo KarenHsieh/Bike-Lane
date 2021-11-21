@@ -27,7 +27,7 @@ export const getListError = results => ({
   },
 })
 
-export const clearList = () => ({
+export const clearBikeLanes = () => ({
   type: actionTypes.CLEAR_BIKE_LANES,
 })
 
@@ -59,4 +59,19 @@ export const getNearByStationError = results => ({
   payload: {
     results,
   },
+})
+
+export const updateSelectedStation = selectedStation => ({
+  type: actionTypes.UPDATE_SELECTED_STATION,
+  payload: {
+    selectedStation,
+  },
+})
+
+export const clearPosition = () => ({
+  type: actionTypes.CLEAR_POSITION,
+})
+
+export const clearStation = () => ({
+  type: actionTypes.CLEAR_STATION,
 })

@@ -36,7 +36,7 @@ const MapContainer = ({ mapType = 'bike', myPosition = [], markers = [], roadMap
       })
 
       const marker = L.marker(myPosition, { icon: pinIcon }).addTo(mymap)
-      marker.bindPopup('<h4>起點</h4>').openPopup()
+
       if (markers && markers.length) {
         // L.marker([25.1421325173852, 121.802056935341], { icon: greenIcon }).addTo(
         //   mymap
@@ -54,6 +54,8 @@ const MapContainer = ({ mapType = 'bike', myPosition = [], markers = [], roadMap
       // }).addTo(mymap)
 
       if (roadMap && roadMap.length) {
+        marker.bindPopup('<h4>起點</h4>').openPopup()
+
         var polyline = L.polyline(roadMap, { color: '#7B61FF', weight: 8 }).addTo(mymap)
 
         // zoom the map to the polyline

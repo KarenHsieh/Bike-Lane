@@ -14,20 +14,14 @@ const MapContainer = ({ mapType = 'station', myPosition = [], markers = [], road
 
   useEffect(() => {
     if (mapObject) {
-      const zoom = roadMap && roadMap.length ? 16 : 12
-
-      console.log('mapObject', mapObject)
-      console.log('myPosition', myPosition)
-      let mymap = mapObject.setView(myPosition, zoom)
+      let mymap = mapObject
 
       const OSMUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
       L.tileLayer(OSMUrl).addTo(mymap)
 
-      // 使用 leaflet-color-markers ( https://github.com/pointhi/leaflet-color-markers ) 當作 marker
-      const pinIcon = new L.Icon({
-        // iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        iconUrl: '/pin.png',
+      const myPositionIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
         iconSize: [42, 66], // [25, 41],
         iconAnchor: [12, 41],
@@ -35,15 +29,23 @@ const MapContainer = ({ mapType = 'station', myPosition = [], markers = [], road
         shadowSize: [41, 41],
       })
 
-      const marker = L.marker(myPosition, { icon: pinIcon }).addTo(mymap)
-      marker.bindPopup('<h4>起點</h4>').openPopup()
+      const marker = L.marker(myPosition, { icon: myPositionIcon }).remove().addTo(mymap)
+      marker.bindPopup('<h4>目前位置</h4>').openPopup()
+
       if (markers && markers.length) {
-        // L.marker([25.1421325173852, 121.802056935341], { icon: greenIcon }).addTo(
-        //   mymap
-        // );
-        // L.marker([25.1430886541818, 121.802976550059], { icon: greenIcon }).addTo(
-        //   mymap
-        // );
+        const pinIcon = new L.Icon({
+          // iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+          iconUrl: '/pin.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+          iconSize: [42, 66], // [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41],
+        })
+
+        markers.forEach(marker => {
+          L.marker(marker, { icon: pinIcon }).addTo(mymap)
+        })
       }
 
       // L.circle(myPosition, {

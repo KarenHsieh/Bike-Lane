@@ -14,6 +14,7 @@ const initState = {
   stationListCount: 0,
   currentLat: '',
   currentLng: '',
+  selectedStation: {},
 }
 
 function BikeReducers(state = initState, action) {
@@ -88,6 +89,31 @@ function BikeReducers(state = initState, action) {
         ...state,
         isLoading: false,
         fetchDataError: true,
+      }
+    }
+
+    case actionTypes.UPDATE_SELECTED_STATION: {
+      const { selectedStation } = action.payload
+      return {
+        ...state,
+        selectedStation,
+      }
+    }
+
+    case actionTypes.CLEAR_POSITION: {
+      return {
+        ...state,
+        currentLat: '',
+        currentLng: '',
+      }
+    }
+
+    case actionTypes.CLEAR_STATION: {
+      return {
+        ...state,
+        selectedStation: {},
+        stationList: [],
+        stationListCount: 0,
       }
     }
 

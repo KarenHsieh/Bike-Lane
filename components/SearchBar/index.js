@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { Form } from 'react-bootstrap'
+import { Form, Spinner } from 'react-bootstrap'
 import { Typeahead } from 'react-bootstrap-typeahead'
 
 import { getCityInputList, getCityCode } from '../../utils/cityCode'
@@ -33,9 +33,14 @@ const SearchBar = ({ mapType }) => {
       console.log('Longitude 經度 : ' + longitude)
       console.log('位置誤差約 ' + crd.accuracy + ' 公尺')
 
+      // 暫時寫死台北車站週遭的位置，不然沒東西測試
+      // 25.0409256,121.5093713
+
       if (mapType === 'bike') {
+        // dispatch(BikeActions.getBikeLanes({ lat: 25.0409256, lng: 121.5093713 }))
         dispatch(BikeActions.getBikeLanes({ lat: latitude, lng: longitude }))
       } else {
+        // dispatch(BikeActions.getNearByStation(25.0409256, 121.5093713))
         dispatch(BikeActions.getNearByStation(latitude, longitude))
       }
     }
@@ -62,19 +67,32 @@ const SearchBar = ({ mapType }) => {
           labelKey="cityName"
           onChange={setSingleSelections}
           options={getCityInputList()}
-          placeholder="請輸入城市名"
+          placeholder={`${mapType === 'bike' ? '請輸入城市名' : '鄉鎮市區、縣市、郵遞區號'}`}
           selected={singleSelections}
           style={{ zIndex: 1001 }}
         />
+        {mapType === 'station' && <div>要取得行政區定位需串接其他政府開放資料api，暫不處理</div>}
       </div>
       <div>
-        <button type="button" className={styles.searchButton} onClick={searchCity}></button>
+        {isLoading ? (
+          <button
+            type="button"
+            className={`${styles.searchButton} ${styles.isLoading}`}
+            onClick={searchCity}
+            disabled={isLoading}
+          >
+            <Spinner animation="border" variant="light" size="md" role="status" aria-hidden="true" />
+          </button>
+        ) : (
+          <button type="button" className={styles.searchButton} onClick={searchCity}></button>
+        )}
       </div>
       <div>
-        <button type="button" className={styles.nearbySearchButton} onClick={nearBySearch}>
+        <button type="button" className={styles.nearbySearchButton} onClick={nearBySearch} disabled={isLoading}>
           <i></i>
           {mapType === 'bike' ? '我附近的自行車道' : '我附近的租借站'}
         </button>
+        {mapType === 'bike' && <div>自行車道路圖資api未提供經緯度搜尋功能，暫不處理</div>}
       </div>
     </div>
   )

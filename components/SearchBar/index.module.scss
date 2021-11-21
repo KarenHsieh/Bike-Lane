@@ -11,6 +11,11 @@
   height: 80px;
   border-radius: 12px;
   margin-left: 20px;
+
+  &.isLoading {
+    background-color: $font_dark_green;
+    background-image: none;
+  }
 }
 
 .nearbySearchButton {

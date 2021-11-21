@@ -75,29 +75,87 @@ export function* getNearByStation({ payload }) {
   if (lat && lng) {
     options = {
       method: 'GET',
-      // url: `${uri.stationNearBy}?$spatialFilter=nearby(${lat},${lng}, 200)&$format=JSON`,
-      url: `${uri.stationNearBy}?$spatialFilter=nearby(25.0409256,121.5093713, 200)&$format=JSON`,
+      url: `${uri.stationNearBy}?$spatialFilter=nearby(${lat},${lng},200)&$format=JSON`,
+      // url: `${uri.stationNearBy}?$spatialFilter=nearby(25.0409256,121.5093713, 200)&$format=JSON`,
     }
   }
 
   try {
-    const response = yield call(async () => {
+    const stationResponse = yield call(async () => {
       console.log('======= [debug] options.url ========')
       console.log(options.url)
       return await axiosCall(options)
     })
 
-    options = {}
-    console.log('========== [debug] response ==========')
-    console.log(response)
-    const { status, data = [] } = response
+    const { status: stationStatus, data: stationData = [] } = stationResponse
 
-    if (status === 200 && data && data.length) {
-      yield put(BikeActions.getListSuccess(data, data.length))
+    console.log('========== [debug] stationResponse ==========')
+    console.log(stationResponse)
+
+    if (stationStatus === 200 && stationData && stationData.length) {
+      const availabilityResponse = yield call(async () => {
+        return await getAvailabilityNearBy(lat, lng)
+      })
+
+      console.log('availabilityResponse', availabilityResponse)
+
+      console.log('========== [debug] availabilityResponse ==========')
+      console.log(availabilityResponse)
+
+      const { status: availabilityStatus, data: availabilityData = [] } = availabilityResponse
+
+      if (availabilityStatus === 200 && availabilityData && availabilityData.length) {
+        console.log('stationData', stationData)
+        console.log('availabilityData', availabilityData)
+        const stationFullData = combineData(stationData, availabilityData)
+
+        console.log('stationFullData', stationFullData)
+
+        yield put(BikeActions.getNearByStationSuccess(stationFullData, stationFullData.length))
+        // yield put(BikeActions.getNearByStationSuccess(stationData, stationData.length))
+      } else {
+        yield put(BikeActions.getNearByStationError())
+      }
     } else {
-      yield put(BikeActions.getListError())
+      yield put(BikeActions.getNearByStationError())
     }
   } catch (error) {
     console.error(`network fetch error - ${options.url} - ${error.message}`)
+  }
+}
+
+async function getAvailabilityNearBy(lat, lng) {
+  return await axiosCall({
+    method: 'GET',
+    url: `${uri.availabilityNearBy}?$spatialFilter=nearby(${lat},${lng},200)&$format=JSON`,
+  })
+}
+
+function combineData(stationData, availabilityData) {
+  if (stationData.length && availabilityData.length) {
+    return stationData.map(station => {
+      let newData = { ...station }
+      const { StationUID } = station
+
+      availabilityData.forEach(availability => {
+        const {
+          StationUID: availabilityStationUID,
+          ServiceStatus,
+          AvailableRentBikes,
+          AvailableReturnBikes,
+        } = availability
+
+        if (StationUID === availabilityStationUID) {
+          newData = {
+            ...newData,
+            ServiceStatus,
+            AvailableRentBikes,
+            AvailableReturnBikes,
+          }
+        }
+      })
+
+      return newData
+    })
   }
 }

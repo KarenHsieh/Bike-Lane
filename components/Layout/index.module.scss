@@ -25,22 +25,52 @@ $footerHeight: 60px;
   padding: 0px 45px !important;
   background-color: #fff !important;
 
+  .logo {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+      color: #7b61ff;
+      font-weight: 500;
+    }
+    &::before {
+      content: ' ';
+      display: block;
+      width: 24px;
+      height: 24px;
+      background-image: url('/bike.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+  }
+
   .otherPage {
     display: flex;
     align-items: center;
     color: $font_black;
     box-sizing: border-box;
     height: 100%;
+    font-size: 20px;
     a {
       color: $font_black;
+      text-decoration: none;
     }
     > div {
       height: 100%;
-      padding: 0px 10px;
+      padding: 0px 30px;
       box-sizing: border-box;
       display: flex;
       align-items: center;
+
       &:hover {
+        a {
+          color: #7b61ff;
+        }
+      }
+
+      &.active {
         cursor: pointer;
         border-bottom: 8px solid #7b61ff;
       }
