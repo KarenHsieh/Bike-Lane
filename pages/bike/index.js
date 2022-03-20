@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import dynamic from 'next/dynamic'
 
@@ -24,7 +24,12 @@ const Bike = () => {
   // const [startPinPosition, setStartPinPosition] = useState('')
   // const [endPinPosition, setEndPinPosition] = useState('')
 
+  // const [isChangedBikeLane, setIsChangedBikeLane] = useState(false)
+
+  // const ref = useRef()
   useEffect(() => {
+    // ref.current = selectedBikeLane
+
     if (selectedBikeLane && Object.keys(selectedBikeLane).length) {
       let { Geometry } = selectedBikeLane
       Geometry = Geometry.replace('MULTILINESTRING ((', '').replace('))', '')

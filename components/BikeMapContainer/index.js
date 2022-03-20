@@ -3,14 +3,36 @@ import PropTypes from 'prop-types'
 
 import L from 'leaflet'
 
+import { objIsEmpty, objIsNotEmpty } from '../../utils/validate'
+
 const MapContainer = ({ mapType = 'bike', myPosition = [], markers = [], roadMap = [] }) => {
   const [mapObject, setMapObject] = useState(undefined)
+  const [tempPolyline, setTempPolyline] = useState(undefined)
+  const [polylineLayerGroup, setPolylineLayerGroup] = useState(undefined)
+
+  // 使用 leaflet-color-markers ( https://github.com/pointhi/leaflet-color-markers ) 當作 marker
+  const pinIcon = new L.Icon({
+    // iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    iconUrl: '/pin.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [42, 66], // [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  })
 
   useEffect(() => {
     if (!mapObject) {
-      setMapObject(L.map('mapid').setView(myPosition, 12))
+      console.log('setMapObject')
+      // setMapObject(L.map('mapid').setView(myPosition, 12))
+      const mapOptions = {
+        center: myPosition,
+        zoom: 12,
+      }
+      const map = new L.map('mapid', mapOptions)
+      setMapObject(map)
     }
-  }, [myPosition])
+  }, [mapObject, myPosition])
 
   useEffect(() => {
     if (mapObject) {
@@ -18,51 +40,65 @@ const MapContainer = ({ mapType = 'bike', myPosition = [], markers = [], roadMap
 
       console.log('mapObject', mapObject)
       console.log('myPosition', myPosition)
-      let mymap = mapObject.setView(myPosition, zoom)
+
+      const myMap = mapObject.setView(myPosition, zoom)
 
       const OSMUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
-      L.tileLayer(OSMUrl).addTo(mymap)
-
-      // 使用 leaflet-color-markers ( https://github.com/pointhi/leaflet-color-markers ) 當作 marker
-      const pinIcon = new L.Icon({
-        // iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        iconUrl: '/pin.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [42, 66], // [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41],
-      })
-
-      const marker = L.marker(myPosition, { icon: pinIcon }).addTo(mymap)
-
-      if (markers && markers.length) {
-        // L.marker([25.1421325173852, 121.802056935341], { icon: greenIcon }).addTo(
-        //   mymap
-        // );
-        // L.marker([25.1430886541818, 121.802976550059], { icon: greenIcon }).addTo(
-        //   mymap
-        // );
-      }
-
-      // L.circle(myPosition, {
-      //   color: 'red',
-      //   fillColor: '#f03',
-      //   fillOpacity: 0.5,
-      //   radius: 10,
-      // }).addTo(mymap)
-
-      if (roadMap && roadMap.length) {
-        marker.bindPopup('<h4>起點</h4>').openPopup()
-
-        var polyline = L.polyline(roadMap, { color: '#7B61FF', weight: 8 }).addTo(mymap)
-
-        // zoom the map to the polyline
-        mymap.fitBounds(polyline.getBounds())
-      }
+      // Creating the Layer Object
+      // L.tileLayer(OSMUrl).addTo(myMap)
+      const layer = new L.tileLayer(OSMUrl)
+      myMap.addLayer(layer)
     }
-  }, [myPosition, markers, roadMap, mapObject])
+  }, [myPosition, mapObject])
+
+  // useEffect(() => {
+  //   var newMarker = new L.Marker(myPosition)
+  //   // Creating layer group
+  //   var layerGroup = L.layerGroup([newMarker])
+
+  //   // Adding layer group to map
+  //   layerGroup.addTo(mapObject)
+
+  //   if (markers && markers.length) {
+  //     // const marker = L.marker(myPosition, { icon: pinIcon }).addTo(mapObject)
+  //     // L.marker([25.1421325173852, 121.802056935341], { icon: greenIcon }).addTo(
+  //     //   myMap
+  //     // );
+  //     // L.marker([25.1430886541818, 121.802976550059], { icon: greenIcon }).addTo(
+  //     //   myMap
+  //     // );
+  //   }
+  //   // layerGroup.removeLayer(newMarker);
+  // }, [markers])
+
+  useEffect(() => {
+    if (tempPolyline) {
+      polylineLayerGroup.removeLayer(tempPolyline)
+    }
+
+    if (roadMap && roadMap.length) {
+      // const marker = L.marker(myPosition, { icon: pinIcon }).addTo(mapObject)
+      const marker = L.marker(myPosition, { icon: pinIcon })
+      marker.bindPopup('<h4>起點</h4>').openPopup()
+
+      // var activePolyline = L.featureGroup().addTo(mapObject)
+      // var polyline = L.polyline(roadMap, { color: '#7B61FF', weight: 8 }).addTo(activePolyline)
+      // activePolyline.clearLayers()
+      // var polyline = L.polyline(roadMap, { color: '#7B61FF', weight: 8 }).addTo(myMap)
+      var polyline = L.polyline(roadMap, { color: '#7B61FF', weight: 8 })
+
+      // zoom the map to the polyline
+      mapObject.fitBounds(polyline.getBounds())
+
+      var newLayerGroup = new L.layerGroup([marker, polyline])
+      newLayerGroup.addTo(mapObject)
+      // mapObject.setView(myPosition, 16)
+
+      setTempPolyline(polyline)
+      setPolylineLayerGroup(newLayerGroup)
+    }
+  }, [roadMap])
 
   // 設定 height 顯示地圖 ( 預設值 height : 0 )
   return <div id="mapid" style={{ height: '100%', width: '100%' }} />
