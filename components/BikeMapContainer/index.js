@@ -93,7 +93,6 @@ const MapContainer = ({ mapType = 'bike', myPosition = [], markers = [], roadMap
 
       var newLayerGroup = new L.layerGroup([marker, polyline])
       newLayerGroup.addTo(mapObject)
-      // mapObject.setView(myPosition, 16)
 
       setTempPolyline(polyline)
       setPolylineLayerGroup(newLayerGroup)
